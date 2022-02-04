@@ -1,0 +1,15 @@
+ With T1 AS(
+ select f.title, c.name,  f.rental_duration,
+ Ntile(4) over (ORDER BY  rental_duration) AS standard_quartile
+  from category c
+  join film_category fc
+  on c.category_id = fc.category_id
+  join film f
+  on fc.film_id = f.film_id
+  WHERE LOWER(name) IN ('animation', 'children', 'classics', 'comedy', 'family', 'music')
+ Order by rental_duration)
+ 
+ select name, standard_quartile, count(*)
+ FROM t1
+ GROUP BY 1,2
+ ORDER BY 1,2

@@ -1,0 +1,14 @@
+Select DATE_TRUNC ('month', payment_date) AS pay_mon,CONCAT(first_name, ' ', last_name) AS fullname, SUM(amount) AS pay_amount
+
+FROM payment p 
+JOIN( SELECT customer_id, SUM(amount) AS total_amount
+	FROM payment
+	WHERE date_part('year', payment_date) = 2005
+	GROUP BY customer_id 
+	ORDER BY total_amount DESC
+	LIMIT 10) sub
+ON p.customer_id= sub.customer_id
+JOIN customer c
+ON c.customer_id = sub.customer_id
+GROUP BY 1,2
+ORDER BY fullname, pay_mon

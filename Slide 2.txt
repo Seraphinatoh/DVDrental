@@ -1,0 +1,26 @@
+WITH t2 as (
+	
+	WITH t1 AS (
+	SELECT  DATE_PART'month', rental_date) AS month, DATE_PART('year',rental_date) AS year, inventory_id
+	FROM rental r)
+
+SELECT month, year, i.store_id, COUNT (*) AS count_rental
+FROM t1
+JOIN inventory i
+ON t1.inventory_id = i.inventory_id
+WHERE year = 2005
+GROUP BY 1,2,3
+ORDER BY count_rental DESC)
+
+
+SELECT t3.month, count_rental_store1, count_rental_store2
+FROM (
+	SELECT month, count_rental AS count_rental_store1
+	FROM T2
+	WHERE store_id = 1) t3
+JOIN (
+	SELECT month, count_rental AS count_rental_store2
+	FROM T2
+	WHERE store_id = 2) t4
+ON t3.month=t4.month
+ORDER BY t3.month
